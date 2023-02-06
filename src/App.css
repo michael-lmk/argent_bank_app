@@ -332,3 +332,39 @@ body {
     width: 200px;
   }
 }
+
+.alert-danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
+.alert-success {
+  color: #155724;
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+}
+
+.alert {
+  position: relative;
+  padding: 0.75rem 1.25rem;
+  margin-bottom: 1rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem;
+}
+
+.edit-user-info {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+}
+
+.edit-user-info .input-wrapper {
+  margin: 15px;
+}
+
+.save-btn, .cancel-btn {
+  margin-right: 15px;
+  margin-left: 15px;
+  width: 100px;
+}

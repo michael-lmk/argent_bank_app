@@ -1,13 +1,18 @@
 import './App.css';
 import { Provider } from 'react-redux'
-import { store } from './store/Store';
 import Navigation from './navigation/Navigation';
+import store from './redux/store/Store';
+import { PersistGate } from 'redux-persist/integration/react'
+import { persistStore } from 'redux-persist'
+
+let persistor = persistStore(store);
 
 function App() {
   return (
     <Provider store={store}>
-      <Navigation></Navigation>
-
+      <PersistGate loading={null} persistor={persistor}>
+        <Navigation></Navigation>
+      </PersistGate>
     </Provider>
   );
 }
