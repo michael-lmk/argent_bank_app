@@ -15,6 +15,9 @@ const Navigation = () => {
 
     const dispatch = useDispatch();
 
+    /**
+     * Set cookie for remember me option while user check checkbox
+     */
     useEffect(() => {
         const cookieValue = document.cookie
             .split('; ')

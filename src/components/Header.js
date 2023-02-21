@@ -7,7 +7,10 @@ export const Header = () => {
     const { user } = useSelector(state => state.user);
     const { jwt } = useSelector(state => state.user);
     const dispatch = useDispatch();
-    console.log(jwt);
+    
+    /**
+     * Function for disconnect user
+     */
     const signOut = () => {
         dispatch(removeState());
     }

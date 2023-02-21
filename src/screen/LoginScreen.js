@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getErrorMessage, checkCredentialSuccess } from '../redux/reducers/UserReducer';
 import {API_URL} from '../constants/Config'
-axios.defaults.baseURL = 'http://localhost:3001/api/v1/user';
+axios.defaults.baseURL = `${API_URL}/api/v1/user`;
 
 const LoginScreen = () => {
     const dispatch = useDispatch()
@@ -17,6 +17,10 @@ const LoginScreen = () => {
 
     const { jwt, error } = useSelector((state) => state.user)
 
+    /**
+     * Submit form for connect user, ajax function return Jwt and put this in redux store
+     * @param {*} e 
+     */
     const submitHandler = async (e) => {
         e.preventDefault()
 

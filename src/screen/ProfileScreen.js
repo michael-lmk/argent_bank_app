@@ -4,7 +4,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { setUserInfo, getErrorMessage, updateUserInfo, getSuccessMessage, removeState } from "../redux/reducers/UserReducer";
-axios.defaults.baseURL = 'http://localhost:3001/api/v1/user';
+import {API_URL} from '../constants/Config'
+axios.defaults.baseURL = `${API_URL}/api/v1/user`;
 
 export const ProfileScreen = () => {
 
@@ -14,19 +15,21 @@ export const ProfileScreen = () => {
     const { jwt, user, error, success } = useSelector(state => state.user);
     const [showFormModify, setShowFormModify] = useState(false);
 
+    /**
+     * Function for get user information And put this in redux store
+     */
     const getUserInfo = async () => {
         try {
 
             var instance = axios.create({
-                baseURL: 'http://localhost:3001/api/v1/user',
                 headers: { 'Authorization': `Bearer ${jwt}` }
             });
 
             const { data } = await instance.post('/profile');
-            console.log(data.status);
+
             if (data.status === 200) {
                 dispatch(setUserInfo(data.body));
-            } 
+            }
 
         } catch (error) {
             handleError();
@@ -36,8 +39,11 @@ export const ProfileScreen = () => {
     const handleError = () => {
         dispatch(getErrorMessage("Session expirer !"));
         dispatch(removeState());
-    } 
+    }
 
+    /**
+     * Submit form for updating user profil
+     */
     const submitUpdateUser = async () => {
         try {
 
@@ -65,8 +71,10 @@ export const ProfileScreen = () => {
         }
     }
 
+    /**
+     * Check is set and redirect if not set 
+     */
     useEffect(() => {
-        console.log("jwt",jwt);
         if (jwt) {
             dispatch(getErrorMessage(""));
             dispatch(getSuccessMessage(""));
@@ -77,6 +85,9 @@ export const ProfileScreen = () => {
 
     }, [jwt])
 
+    /**
+     * Display error message after 5 second 
+     */
     useEffect(() => {
         setTimeout(() => {
             dispatch(getErrorMessage(""));
