@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getErrorMessage, checkCredentialSuccess } from '../redux/reducers/UserReducer';
-
+import {API_URL} from '../constants/Config'
 axios.defaults.baseURL = 'http://localhost:3001/api/v1/user';
 
 const LoginScreen = () => {
@@ -13,6 +13,7 @@ const LoginScreen = () => {
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
+    const [rememberMe, setRememberMe] = useState(false)
 
     const { jwt, error } = useSelector((state) => state.user)
 
@@ -33,6 +34,9 @@ const LoginScreen = () => {
             )
             
             if (data.status === 200) {
+                if (rememberMe) {
+                    document.cookie = `jwt=${data.body.token}; SameSite=${API_URL}; max-age=31536000 `;
+                }
                 dispatch(checkCredentialSuccess(data.body.token))
             }
 
@@ -43,7 +47,6 @@ const LoginScreen = () => {
     }
 
     useEffect(() => {
-
         if (jwt) {
             navigate('/profile')
         }
@@ -67,7 +70,7 @@ const LoginScreen = () => {
                         <input type="password" id="password" onChange={(event) => { setPassword(event.target.value) }} />
                     </div>
                     <div className="input-remember">
-                        <input type="checkbox" id="remember-me" />
+                        <input type="checkbox" id="remember-me" onChange={(event) => { setRememberMe(() => event.target.checked); }} value="remembered" />
                         <label htmlFor="remember-me">Remember me</label>
                     </div>
 

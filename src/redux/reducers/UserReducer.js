@@ -25,20 +25,22 @@ export const userReducer = createSlice({
       state.user = action.payload;
     },
     updateUserInfo: (state, action) => {
-      if (action.payload.firstName != undefined) {
-        state.user.firstName = action.payload.firstName;  
+      if (action.payload.firstName !== undefined) {
+        state.user.firstName = action.payload.firstName;
       }
-      if (action.payload.lastName != undefined) {
-        state.user.lastName = action.payload.lastName;  
+      if (action.payload.lastName !== undefined) {
+        state.user.lastName = action.payload.lastName;
       }
-      
-      
+    },
+    removeState: (state, action) => {
+      state = initialState;
+      return state;
     },
 
   },
 })
 
 // Action creators are generated for each case reducer function
-export const { checkCredentialSuccess, checkCredentialFailed, setUserInfo, getErrorMessage, updateUserInfo, getSuccessMessage } = userReducer.actions
+export const { checkCredentialSuccess, checkCredentialFailed, setUserInfo, getErrorMessage, updateUserInfo, getSuccessMessage, removeState } = userReducer.actions
 
 export default userReducer.reducer

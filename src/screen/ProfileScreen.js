@@ -1,17 +1,17 @@
-import React, { useEffect, useState } from 'react'
-import { AppContainer } from '../appContainer/AppContainer'
-import { useDispatch, useSelector } from "react-redux"
+import React, { useEffect, useState } from 'react';
+import { AppContainer } from '../appContainer/AppContainer';
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios'
-import { setUserInfo, getErrorMessage, updateUserInfo, getSuccessMessage } from "../redux/reducers/UserReducer"
+import axios from 'axios';
+import { setUserInfo, getErrorMessage, updateUserInfo, getSuccessMessage, removeState } from "../redux/reducers/UserReducer";
+axios.defaults.baseURL = 'http://localhost:3001/api/v1/user';
 
 export const ProfileScreen = () => {
 
     const dispatch = useDispatch();
-    let navigate = useNavigate()
+    let navigate = useNavigate();
 
     const { jwt, user, error, success } = useSelector(state => state.user);
-
     const [showFormModify, setShowFormModify] = useState(false);
 
     const getUserInfo = async () => {
@@ -20,59 +20,70 @@ export const ProfileScreen = () => {
             var instance = axios.create({
                 baseURL: 'http://localhost:3001/api/v1/user',
                 headers: { 'Authorization': `Bearer ${jwt}` }
-            })
+            });
 
-            const { data } = await instance.post('/profile')
-
+            const { data } = await instance.post('/profile');
+            console.log(data.status);
             if (data.status === 200) {
-                dispatch(setUserInfo(data.body))
-            }
+                dispatch(setUserInfo(data.body));
+            } 
 
         } catch (error) {
-            dispatch(getErrorMessage("Session expirer !"))
+            handleError();
         }
     }
+
+    const handleError = () => {
+        dispatch(getErrorMessage("Session expirer !"));
+        dispatch(removeState());
+    } 
 
     const submitUpdateUser = async () => {
         try {
 
-            var instance = axios.create({
-                baseURL: 'http://localhost:3001/api/v1/user',
-                headers: { 'Authorization': `Bearer ${jwt}` }
-            })
+            const config = {
+                headers: {
+                    'Content-type': 'application/json',
+                    'Authorization': `Bearer ${jwt}`
+                },
+            }
 
-            const { data } = await instance.put('/profile', {
-                lastName: user.lastName,
-                firstName: user.firstName
-            })
+            const { data } = await axios.put('/profile',
+                {
+                    lastName: user.lastName,
+                    firstName: user.firstName
+                },
+                config
+            );
 
             if (data.status === 200) {
                 dispatch(getSuccessMessage(data.message));
             }
 
         } catch (error) {
-            dispatch(getErrorMessage(error.message))
+            dispatch(getErrorMessage(error.message));
         }
     }
 
     useEffect(() => {
+        console.log("jwt",jwt);
         if (jwt) {
-            dispatch(getErrorMessage(""))
+            dispatch(getErrorMessage(""));
             dispatch(getSuccessMessage(""));
             getUserInfo();
         } else {
-            navigate('/login')
+            navigate('/');
         }
-        
+
     }, [jwt])
 
     useEffect(() => {
-      setTimeout(() => {
-        dispatch(getErrorMessage(""))
-        dispatch(getSuccessMessage(""));
-      }, 5000)
+        setTimeout(() => {
+            dispatch(getErrorMessage(""));
+            dispatch(getSuccessMessage(""));
+        }, 5000);
     }, [error, success])
-    
+
 
     return (
         <AppContainer>
@@ -85,10 +96,10 @@ export const ProfileScreen = () => {
                     <div>
                         <div className='edit-user-info'>
                             <div className="input-wrapper">
-                                <input placeholder='firstname' type="text" id="firstname" value={ user.firstName ? user.firstName : "" } onChange={(event) => { dispatch(updateUserInfo({ firstName: event.target.value })) }} />
+                                <input placeholder='firstname' type="text" id="firstname" value={user.firstName ? user.firstName : ""} onChange={(event) => { dispatch(updateUserInfo({ firstName: event.target.value })) }} />
                             </div>
                             <div className="input-wrapper">
-                                <input placeholder='lastname' type="text" id="lastname" value={ user.lastName ? user.lastName : "" } onChange={(event) => { dispatch(updateUserInfo({ lastName: event.target.value })) }} />
+                                <input placeholder='lastname' type="text" id="lastname" value={user.lastName ? user.lastName : ""} onChange={(event) => { dispatch(updateUserInfo({ lastName: event.target.value })) }} />
                             </div>
 
                         </div>

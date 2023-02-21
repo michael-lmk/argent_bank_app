@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
     BrowserRouter as Router,
     Route,
@@ -7,15 +7,25 @@ import {
 import { HomeScreen } from "../screen/HomeScreen";
 import LoginScreen from "../screen/LoginScreen"
 import { ProfileScreen } from "../screen/ProfileScreen";
-import axios from 'axios';
-import { useSelector } from "react-redux";
-
+import { useDispatch } from "react-redux";
+import { checkCredentialSuccess } from "../redux/reducers/UserReducer";
 
 
 const Navigation = () => {
-    const { jwt } = useSelector(state => state.user);
-    axios.defaults.baseURL = 'http://localhost:3001/api/v1/user';
-    // axios.defaults.headers.common = {'Authorization': `bearer ${jwt}`}
+
+    const dispatch = useDispatch();
+
+    useEffect(() => {
+        const cookieValue = document.cookie
+            .split('; ')
+            .find((row) => row.startsWith('jwt='))
+            ?.split('=')[1];
+
+        if (cookieValue) {
+            dispatch(checkCredentialSuccess(cookieValue));
+        }
+    }, [])
+
 
     return (
         <>
@@ -31,5 +41,5 @@ const Navigation = () => {
         </>
     )
 }
- 
+
 export default Navigation

@@ -1,9 +1,16 @@
-import React, { useEffect } from 'react';
-import { useSelector } from 'react-redux';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { NavLink } from "react-router-dom";
+import { removeState } from '../redux/reducers/UserReducer';
 
 export const Header = () => {
     const { user } = useSelector(state => state.user);
+    const { jwt } = useSelector(state => state.user);
+    const dispatch = useDispatch();
+    console.log(jwt);
+    const signOut = () => {
+        dispatch(removeState());
+    }
 
     return (
         <nav className="main-nav">
@@ -15,15 +22,23 @@ export const Header = () => {
                 />
                 <h1 className="sr-only">Argent Bank</h1>
             </NavLink>
-            <div>
-                <NavLink className="main-nav-item" to="/login">
-                    <i className="fa fa-user-circle"></i>
-                    {user.firstName && user.lastName
-                    ? `${user.firstName} ${user.lastName}`
-                    :"Sign In"
-                    }
-                </NavLink>
+            <div className='row'>
+                <div>
+                    <NavLink className="main-nav-item" to="/login">
+                        <i className="fa fa-user-circle"></i>
+                        {user.firstName && user.lastName
+                            ? `${user.firstName} ${user.lastName}`
+                            : "Sign In"
+                        }
+                    </NavLink>
+                </div>
+                {jwt.length > 0 &&
+                    <button onClick={() => { signOut() }} className='sign-out'>
+                        sign out
+                    </button>
+                }
             </div>
+
         </nav>
     )
 }

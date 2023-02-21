@@ -356,6 +356,7 @@ body {
 .edit-user-info {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   justify-content: center;
 }
 
@@ -367,4 +368,15 @@ body {
   margin-right: 15px;
   margin-left: 15px;
   width: 100px;
+}
+
+.row {
+  display: flex;
+}
+
+.sign-out {
+  background-color: transparent;
+  border: none;
+  color: rgb(255, 114, 114);
+  cursor: pointer;
 }
